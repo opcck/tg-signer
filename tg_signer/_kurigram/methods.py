@@ -1,4 +1,5 @@
 from typing import AsyncGenerator, Union
+import inspect
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -53,6 +54,8 @@ class SafeGetForumTopics:
                 parsed_topic = types.ForumTopic._parse(
                     self, topic, messages, users, chats
                 )
+                if inspect.isawaitable(parsed_topic):
+                    parsed_topic = await parsed_topic
                 if parsed_topic is None or parsed_topic.id in seen_topic_ids:
                     continue
                 seen_topic_ids.add(parsed_topic.id)
